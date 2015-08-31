@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/NN.iml" filepath="$PROJECT_DIR$/NN.iml" />
-      <module fileurl="file://$PROJECT_DIR$/automation/automation.iml" filepath="$PROJECT_DIR$/automation/automation.iml" />
     </modules>
   </component>
 </project>
