@@ -5,10 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ro.nn</groupId>
     <artifactId>qa</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <name>Spring OSGi Bundle</name>
     <version>0.9-SNAPSHOT</version>
     <url>http://www.springframework.org/osgi</url>
+    <modules>
+        <module>expect</module>
+    </modules>
 
     <properties>
         <slf4j.version>1.5.0</slf4j.version>
@@ -80,6 +83,13 @@
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+
 
     </dependencies>
 

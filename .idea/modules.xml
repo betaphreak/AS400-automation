@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/NN.iml" filepath="$PROJECT_DIR$/NN.iml" />
+      <module fileurl="file://$PROJECT_DIR$/expect/expect.iml" filepath="$PROJECT_DIR$/expect/expect.iml" />
     </modules>
   </component>
 </project>
