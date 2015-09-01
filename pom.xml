@@ -2,15 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>ro.nn</groupId>
     <artifactId>qa</artifactId>
     <packaging>pom</packaging>
     <name>Spring OSGi Bundle</name>
     <version>0.9-SNAPSHOT</version>
-    <url>http://www.springframework.org/osgi</url>
+
     <modules>
         <module>expect</module>
+        <module>automation</module>
     </modules>
 
     <properties>
@@ -96,6 +99,20 @@
             <version>4.12</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.53</version>
+        </dependency>
+
+        <!-- AS400 dependencies -->
+
+        <dependency>
+            <groupId>net.sf.jt400</groupId>
+            <artifactId>jt400</artifactId>
+            <version>6.7</version>
+        </dependency>
+
     </dependencies>
 
 
@@ -119,10 +136,6 @@
                         <additionalClasspathElements>
                             <additionalClasspathElement>selenium</additionalClasspathElement>
                         </additionalClasspathElements>
-                        <suiteXmlFiles>
-                            <suiteXmlFile>testng.xml</suiteXmlFile>
-                        </suiteXmlFiles>
-
                     </configuration>
                 </plugin>
             </plugins>

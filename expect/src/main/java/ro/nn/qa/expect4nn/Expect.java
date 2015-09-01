@@ -1,4 +1,4 @@
-package expect4nn;
+package ro.nn.qa.expect4nn;
 
 import org.apache.log4j.*;
 

@@ -18,15 +18,22 @@
         <processorPath useClasspath="true" />
       </profile>
       <profile default="false" name="Annotation profile for expect" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="expect" />
       </profile>
+      <profile default="false" name="Annotation profile for automation" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="automation" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="automation" target="1.5" />
+      <module name="automation" target="1.8" />
       <module name="expect" target="1.8" />
       <module name="NN" target="1.5" />
     </bytecodeTargetLevel>

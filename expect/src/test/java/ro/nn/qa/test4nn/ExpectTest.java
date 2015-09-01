@@ -1,14 +1,18 @@
-package test4nn;
+package ro.nn.qa.test4nn;
 
-import expect4nn.Expect;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import org.apache.log4j.Level;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import ro.nn.qa.expect4nn.Expect;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.Channel;
 import java.nio.channels.Channels;
 import java.nio.channels.Pipe;
 import java.util.regex.Pattern;
@@ -32,6 +36,31 @@ public class ExpectTest {
 
     @AfterClass
     public static void close() throws Exception {
+    }
+
+    @Test
+    public void testTelnet() throws JSchException, IOException {
+        JSch jsch = new JSch();
+        Session session = jsch.getSession(null, "NRO", 992);
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.connect(5 * 1000);
+        com.jcraft.jsch.Channel channel = session.openChannel("shell");
+
+
+        Expect expect = new Expect(channel.getInputStream(),
+                channel.getOutputStream());
+        channel.connect();
+        expect.expect("$");
+        System.out.println(expect.before + expect.match);
+        expect.send("ls\n");
+        expect.expect("$");
+        System.out.println(expect.before + expect.match);
+        expect.send("exit\n");
+        expect.expectEOF();
+        System.out.println(expect.before);
+        expect.close();
+
+        session.disconnect();
     }
 
     @Test

@@ -6,19 +6,33 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ro.nn</groupId>
-    <artifactId>expect</artifactId>
+    <artifactId>automation</artifactId>
     <version>0.9-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>expect</name>
+    <name>automation</name>
     <url>http://maven.apache.org</url>
 
     <parent>
         <groupId>ro.nn</groupId>
         <artifactId>qa</artifactId>
-        <version>0.9.0</version>
+        <version>0.9-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
+<dependencies>
+
+    <dependency>
+        <groupId>org.tn5250j</groupId>
+        <artifactId>tb5250j</artifactId>
+        <version>0.7.5</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/../lib/tn5250j.jar</systemPath>
+    </dependency>
+
+</dependencies>
+
+
 
 
 </project>
