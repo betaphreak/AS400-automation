@@ -86,19 +86,18 @@ public class Expect {
                 input.close();		// now that input has EOF, close it.
                 // other than this, do not close input
             } catch (IOException e) {
-                log.warn("IOException when piping from InputStream, "
-                        + "now the piping thread will end", e);
+                log.warn("IOException when piping from InputStream, thread closed", e);
                 //e.printStackTrace();
             } finally {
                 try {
-                    log.debug("closing sink of the pipe");
+                    log.debug("closed sink of the pipe");
                     out.close();
                 } catch (IOException e) {
                 }
             }
         });
 
-        piping.setName("Piping InputStream to SelectableChannel Thread");
+        piping.setName("InputStream via SelectableChannel");
         piping.setDaemon(true);
         piping.start();
         return pipe.source();
@@ -192,26 +191,22 @@ public class Expect {
     }
 
     /**
-     * Convenience method, internally it constructs a List{@literal <Pattern>}
-     * using the object array, and call {@link #expect(int, List) } using the
-     * List. The {@link String}s in the object array will be treated as
-     * literals; meanwhile {@link Pattern}s will be directly added to the List.
-     * If the array contains other objects, they will be converted by
-     * {@link #toString()} and then used as literal strings.
+     * Convenience method, internally it constructs a List{@literal <Pattern>} using the object array, and call {@link #expect(int, List) } using the
+     * List. The {@link String}s in the object array will be treated as literals; meanwhile {@link Pattern}s will be directly added to the List.
+     * If the array contains other objects, they will be converted by {@link #toString()} and then used as literal strings.
      *
      * @param patterns
      * @return
      */
-    public int expect(int timeout, Object... patterns) {
+    public int expects(int timeout, Object... patterns) {
         ArrayList<Pattern> list = new ArrayList<Pattern>();
         for (Object o : patterns) {
             if (o instanceof String)
-                list.add(Pattern.compile(Pattern.quote((String) o))); // requires 1.5 and up
+                list.add(Pattern.compile(Pattern.quote((String) o)));
             else if (o instanceof Pattern)
                 list.add((Pattern) o);
             else{
-                log.warn("Object " + o.toString() + " (class: "
-                        + o.getClass().getName() + ") is neither a String nor "
+                log.warn("Object " + o.toString() + " (class: " + o.getClass().getName() + ") is neither a String nor "
                         + "a java.util.regex.Pattern, using as a literal String");
                 list.add(Pattern.compile(Pattern.quote(o.toString())));
             }
