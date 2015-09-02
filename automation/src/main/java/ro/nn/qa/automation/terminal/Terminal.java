@@ -10,6 +10,8 @@ import org.tn5250j.tools.LangTool;
 import org.tn5250j.tools.logging.TN5250jLogFactory;
 import org.tn5250j.tools.logging.TN5250jLogger;
 
+import ro.nn.qa.bootstrap.Controller;
+
 import javax.swing.*;
 import java.awt.*;
 import java.net.InetAddress;
@@ -27,10 +29,9 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
     protected TerminalViewInterface frame;
     private String[] sessionArgs = null;
     private static Properties sessions = new Properties();
-    private static BootStrapper strapper = null;
+    private static Controller controller = null;
     private SessionManager manager;
     private static List<TerminalViewInterface> frames;
-    private int step;
     StringBuilder viewNamesForNextStartBuilder = null;
 
     private TN5250jLogger log = TN5250jLogFactory.getLogger(this.getClass());
@@ -72,6 +73,56 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
     private static void loadSessions()
     {
         sessions = (ConfigureFactory.getInstance()).getProperties(ConfigureFactory.SESSIONS);
+    }
+
+    public static List<String> loadLastSessionViewNames() {
+        List<String> sessionNames = new ArrayList<String>();
+        if (sessions.containsKey("emul.startLastView")) {
+            String emulview = sessions.getProperty("emul.view", "");
+            int idxstart = 0;
+            int idxend = emulview.indexOf(PARAM_START_SESSION, idxstart);
+            for (; idxend > -1; idxend = emulview.indexOf(PARAM_START_SESSION, idxstart)) {
+                String sessname = emulview.substring(idxstart, idxend).trim();
+                if (sessname.length() > 0) {
+                    sessionNames.add(sessname);
+                }
+                idxstart = idxend + PARAM_START_SESSION.length();
+            }
+            if (idxstart + PARAM_START_SESSION.length() < emulview.length()) {
+                String sessname = emulview.substring(idxstart + PARAM_START_SESSION.length() - 1).trim();
+                if (sessname.length() > 0) {
+                    sessionNames.add(sessname);
+                }
+            }
+        }
+        return sessionNames;
+    }
+
+    public static List<String> filterExistingViewNames(List<String> lastViewNames) {
+        List<String> result = new ArrayList<String>();
+        for (String viewName : lastViewNames) {
+            if (sessions.containsKey(viewName)) {
+                result.add(viewName);
+            }
+        }
+        return result;
+    }
+
+    public static void insertDefaultSessionIfConfigured(List<String> lastViewNames) {
+        if (getDefaultSession() != null && !lastViewNames.contains(getDefaultSession())) {
+            lastViewNames.add(0, getDefaultSession());
+        }
+    }
+
+    public static void startSessionsFromList(Terminal m, List<String> lastViewNames) {
+        for (int i=0; i<lastViewNames.size(); i++) {
+            String viewName = lastViewNames.get(i);
+            if (!m.frame.isVisible()) {
+            }
+            m.sessionArgs = new String[TN5250jConstants.NUM_PARMS];
+            Terminal.parseArgs(sessions.getProperty(viewName),m.sessionArgs);
+            m.newSession(viewName, m.sessionArgs);
+        }
     }
 
     private void newView()
@@ -130,10 +181,10 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
             sessions.setProperty("emul.view",viewNamesForNextStartBuilder.toString());
 
             // save off the session settings before closing down
-            ConfigureFactory.getInstance().saveSettings(ConfigureFactory.SESSIONS,
-                    ConfigureFactory.SESSIONS, "------ Defaults --------");
-            if (strapper != null) {
-                strapper.interrupt();
+            ConfigureFactory.getInstance().saveSettings(ConfigureFactory.SESSIONS, ConfigureFactory.SESSIONS, "------ Defaults --------");
+            if (controller != null)
+            {
+                controller.interrupt();
             }
             System.exit(0);
         }
@@ -378,31 +429,6 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
         // ... and a panel containing it
         SessionPanel s = new SessionPanel(s2);
 
-        /* TODO: default behavior should be -noembed for automation
-
-        if (!frame.isVisible()) {
-
-            // Here we check if this is the first session created in the system.
-            //  We have to create a frame on initialization for use in other scenarios
-            //  so if this is the first session being added in the system then we
-            //  use the frame that is created and skip the part of creating a new
-            //  view which would increment the count and leave us with an unused
-            //  frame.
-            if (isSpecified("-noembed",args) && sessionCount > 0) {
-                newView();
-            }
-            frame.setVisible(true);
-            frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        }
-        else {
-            if (isSpecified("-noembed",args)) {
-                newView();
-                frame.setVisible(true);
-                frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-
-            }
-        }
-        */
         newView();
         frame.setVisible(true);
         frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
