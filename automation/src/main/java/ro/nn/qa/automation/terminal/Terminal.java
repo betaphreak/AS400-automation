@@ -5,9 +5,7 @@ import org.tn5250j.event.*;
 import org.tn5250j.framework.Tn5250jController;
 import org.tn5250j.framework.common.SessionManager;
 import org.tn5250j.framework.common.Sessions;
-import org.tn5250j.gui.TN5250jSplashScreen;
 import org.tn5250j.interfaces.ConfigureFactory;
-import org.tn5250j.interfaces.GUIViewInterface;
 import org.tn5250j.tools.LangTool;
 import org.tn5250j.tools.logging.TN5250jLogFactory;
 import org.tn5250j.tools.logging.TN5250jLogger;
@@ -26,17 +24,22 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
 {
     private static final String PARAM_START_SESSION = "-s";
 
-    private TerminalViewInterface frame1;
+    protected TerminalViewInterface frame;
     private String[] sessionArgs = null;
     private static Properties sessions = new Properties();
     private static BootStrapper strapper = null;
     private SessionManager manager;
     private static List<TerminalViewInterface> frames;
-    private TN5250jSplashScreen splash;
     private int step;
     StringBuilder viewNamesForNextStartBuilder = null;
 
     private TN5250jLogger log = TN5250jLogFactory.getLogger(this.getClass());
+
+    public TerminalViewInterface getFrame()
+    {
+        return frame;
+    }
+
 
     public Terminal()
     {
@@ -76,13 +79,13 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = screenSize.width;
         int height = screenSize.height - 80;
-        frame1 = new TerminalFrame(this);
+        frame = new TerminalFrame(this);
 
-        frame1.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-        frame1.setSize(width, height);
-        frame1.centerFrame();
-        frames.add(frame1);
+        frame.setSize(width, height);
+        frame.centerFrame();
+        frames.add(frame);
     }
 
     protected void closingDown(TerminalViewInterface view)
@@ -230,8 +233,7 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
 
     private String openConnectSessionDialog ()
     {
-        splash.setVisible(false);
-        ConnectDialog sc = new ConnectDialog(frame1, LangTool.getString("ss.title"),sessions);
+        ConnectDialog sc = new ConnectDialog(frame, LangTool.getString("ss.title"),sessions);
 
         // load the new session information from the session property file
         loadSessions();
@@ -254,7 +256,7 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
         }
     }
 
-    private void startNewSession()
+    public void startNewSession()
     {
         String sel = "";
         if (containsNotOnlyNullValues(sessionArgs) && !sessionArgs[0].startsWith("-"))
@@ -302,7 +304,7 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
         return null;
     }
 
-    private synchronized void newSession(String sel,String[] args) {
+    protected synchronized void newSession(String sel,String[] args) {
 
         Properties sesProps = new Properties();
 
@@ -322,14 +324,10 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
         if (isSpecified("-f",args))
             propFileName = getParm("-f",args);
 
-        /*  TODO: remove default codepage behavior
+        //  TODO: remove default codepage behavior and replace it with 870
 
         if (isSpecified("-cp",args))
             sesProps.put(TN5250jConstants.SESSION_CODE_PAGE ,getParm("-cp",args));
-
-        */
-        sesProps.put(TN5250jConstants.SESSION_CODE_PAGE, 870);
-
 
         if (isSpecified("-gui",args))
             sesProps.put(TN5250jConstants.SESSION_USE_GUI,"1");
@@ -342,7 +340,7 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
         else
             sesProps.put(TN5250jConstants.SESSION_SCREEN_SIZE,TN5250jConstants.SCREEN_SIZE_24X80_STR);
 
-        /*  are we to use a ssl and if we are what type
+        /*  TODO: are we to use a ssl and if we are what type
         if (isSpecified("-sslType",args)) {
 
             sesProps.put(TN5250jConstants.SSL_TYPE,getParm("-sslType",args));
@@ -375,12 +373,14 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
 
         int sessionCount = manager.getSessions().getCount();
 
+        // here we open a new 5250 session on the current session manager
         Session5250 s2 = manager.openSession(sesProps,propFileName,sel);
+        // ... and a panel containing it
         SessionPanel s = new SessionPanel(s2);
 
+        /* TODO: default behavior should be -noembed for automation
 
-        if (!frame1.isVisible()) {
-            splash.updateProgress(++step);
+        if (!frame.isVisible()) {
 
             // Here we check if this is the first session created in the system.
             //  We have to create a frame on initialization for use in other scenarios
@@ -391,25 +391,27 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
             if (isSpecified("-noembed",args) && sessionCount > 0) {
                 newView();
             }
-            splash.setVisible(false);
-            frame1.setVisible(true);
-            frame1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            frame.setVisible(true);
+            frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
         else {
             if (isSpecified("-noembed",args)) {
-                splash.updateProgress(++step);
                 newView();
-                splash.setVisible(false);
-                frame1.setVisible(true);
-                frame1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                frame.setVisible(true);
+                frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
             }
         }
+        */
+        newView();
+        frame.setVisible(true);
+        frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
 
         if (isSpecified("-t",args))
-            frame1.addSessionView(sel,s);
+            frame.addSessionView(sel,s);
         else
-            frame1.addSessionView(session,s);
+            frame.addSessionView(session,s);
 
         s.connect();
 
