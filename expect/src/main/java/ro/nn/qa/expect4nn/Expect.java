@@ -29,19 +29,6 @@ public class Expect {
     }
 
     private static PrintStream duplicatedTo = null;
-    /**
-     * While performing expect operations on the InputStream provided, duplicate the contents obtained from InputStream
-     * to a PrintStream (you can use System.err or System.out). <b>DO NOT</b> call this function while there
-     * are live Expect objects as this may cause the piping thread to end due to unsynchronized code;
-     * if you need this feature, add the following to both {@link #inputStreamToSelectableChannel(InputStream)} and
-     * {@link #forwardInputStreamTo(PrintStream)}:
-     * <pre>
-     * {@code
-     * 	synchronized(Expect.duplicatedTo) {...}
-     * </pre>
-     * @param duplicatedTo
-     *            call with null if you want to turn off
-     */
     public static void forwardInputStreamTo(PrintStream duplicatedTo) {
         Expect.duplicatedTo = duplicatedTo;
     }
@@ -111,16 +98,7 @@ public class Expect {
     public Process getProcess() {
         return process;
     }
-    /**
-     * Creates an Expect object by spawning a command.<br>
-     * To Linux users, perhaps you need to use "bash -i" if you want to spawn
-     * Bash.<br>
-     * Note: error stream of the process is redirected to output stream.
-     *
-     * @param command
-     * @return Expect object created using the input and output handles from the
-     *         spawned process
-     */
+
     public static Expect spawn(String command) {
         ProcessBuilder pb = new ProcessBuilder(command.split(" "));
         pb.redirectErrorStream(true);
@@ -166,14 +144,11 @@ public class Expect {
     private StringBuffer buffer = new StringBuffer();
     private boolean notransfer = false;
 
-    /**String before the last match(if there was a match),
-     *  updated after each expect() call*/
+    /**String before the last match(if there was a match), updated after each expect() call*/
     public String before;
-    /**String representing the last match(if there was a match),
-     *  updated after each expect() call*/
+    /**String representing the last match(if there was a match), updated after each expect() call*/
     public String match;
-    /**Whether the last match was successful,
-     *  updated after each expect() call*/
+    /**Whether the last match was successful, updated after each expect() call*/
     public boolean isSuccess = false;
 
     public static final int RETV_TIMEOUT = -1, RETV_EOF = -2,
