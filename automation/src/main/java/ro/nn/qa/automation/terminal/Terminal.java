@@ -98,33 +98,6 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
         return sessionNames;
     }
 
-    public static List<String> filterExistingViewNames(List<String> lastViewNames) {
-        List<String> result = new ArrayList<String>();
-        for (String viewName : lastViewNames) {
-            if (sessions.containsKey(viewName)) {
-                result.add(viewName);
-            }
-        }
-        return result;
-    }
-
-    public static void insertDefaultSessionIfConfigured(List<String> lastViewNames) {
-        if (getDefaultSession() != null && !lastViewNames.contains(getDefaultSession())) {
-            lastViewNames.add(0, getDefaultSession());
-        }
-    }
-
-    public static void startSessionsFromList(Terminal m, List<String> lastViewNames) {
-        for (int i=0; i<lastViewNames.size(); i++) {
-            String viewName = lastViewNames.get(i);
-            if (!m.frame.isVisible()) {
-            }
-            m.sessionArgs = new String[TN5250jConstants.NUM_PARMS];
-            Terminal.parseArgs(sessions.getProperty(viewName),m.sessionArgs);
-            m.newSession(viewName, m.sessionArgs);
-        }
-    }
-
     private void newView()
     {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -169,9 +142,7 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
         frames.remove(view);
         view.dispose();
 
-        if (log.isDebugEnabled()) {
-            log.debug("number of active sessions we have after shutting down " + sess.getCount());
-        }
+        log.debug("number of active sessions we have after shutting down " + sess.getCount());
 
         log.info("view settings " + viewNamesForNextStartBuilder);
         if (sess.getCount() == 0) {
@@ -291,23 +262,7 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
         return sc.getConnectKey();
     }
 
-
-    private void openConnectSessionDialogAndStartSelectedSession() {
-        String sel = openConnectSessionDialog();
-        Sessions sess = manager.getSessions();
-        if (sel != null) {
-            String selArgs = sessions.getProperty(sel);
-            sessionArgs = new String[TN5250jConstants.NUM_PARMS];
-            parseArgs(selArgs, sessionArgs);
-
-            newSession(sel, sessionArgs);
-        } else {
-            if (sess.getCount() == 0)
-                System.exit(0);
-        }
-    }
-
-    public void startNewSession()
+    public SessionPanel startNewSession()
     {
         String sel = "";
         if (containsNotOnlyNullValues(sessionArgs) && !sessionArgs[0].startsWith("-"))
@@ -325,11 +280,8 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
             parseArgs(sessions.getProperty(sel), sessionArgs);
         }
 
-        if (sessionArgs == null || sess.getCount() > 0 || sessions.containsKey("emul.showConnectDialog")) {
-            openConnectSessionDialogAndStartSelectedSession();
-        } else {
-            newSession(sel, sessionArgs);
-        }
+        return newSession(sel, sessionArgs);
+
     }
 
     private static boolean isSpecified(String parm, String[] args)
@@ -355,7 +307,7 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
         return null;
     }
 
-    protected synchronized void newSession(String sel,String[] args) {
+    protected synchronized SessionPanel newSession(String sel,String[] args) {
 
         Properties sesProps = new Properties();
 
@@ -380,23 +332,14 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
         if (isSpecified("-cp",args))
             sesProps.put(TN5250jConstants.SESSION_CODE_PAGE ,getParm("-cp",args));
 
-        if (isSpecified("-gui",args))
-            sesProps.put(TN5250jConstants.SESSION_USE_GUI,"1");
+        sesProps.put(TN5250jConstants.SESSION_USE_GUI,"1");
 
         if (isSpecified("-t", args))
             sesProps.put(TN5250jConstants.SESSION_TERM_NAME_SYSTEM, "1");
 
-        if (isSpecified("-132",args))
-            sesProps.put(TN5250jConstants.SESSION_SCREEN_SIZE,TN5250jConstants.SCREEN_SIZE_27X132_STR);
-        else
-            sesProps.put(TN5250jConstants.SESSION_SCREEN_SIZE,TN5250jConstants.SCREEN_SIZE_24X80_STR);
+        sesProps.put(TN5250jConstants.SESSION_SCREEN_SIZE,TN5250jConstants.SCREEN_SIZE_24X80_STR);
 
-        /*  TODO: are we to use a ssl and if we are what type
-        if (isSpecified("-sslType",args)) {
-
-            sesProps.put(TN5250jConstants.SSL_TYPE,getParm("-sslType",args));
-        }
-        */
+        //  TODO: are we to use a ssl and if we are what type
         sesProps.put(TN5250jConstants.SSL_TYPE, TN5250jConstants.SSL_TYPE_TLS);
 
 
@@ -442,6 +385,8 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
         s.connect();
 
         s.addEmulatorActionListener(this);
+
+        return s;
     }
 
 

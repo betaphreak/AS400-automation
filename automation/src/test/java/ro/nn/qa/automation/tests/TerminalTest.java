@@ -1,22 +1,17 @@
 package ro.nn.qa.automation.tests;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.tn5250j.Session5250;
-import org.tn5250j.SessionConfig;
 import org.tn5250j.SessionPanel;
+import org.tn5250j.framework.tn5250.tnvt;
 import org.tn5250j.tools.LangTool;
 
-import ro.nn.qa.automation.terminal.Session;
 import ro.nn.qa.automation.terminal.Terminal;
 import ro.nn.qa.bootstrap.Controller;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
@@ -30,7 +25,6 @@ public class TerminalTest
 {
 
     protected Controller controller;
-    java.util.List<String> lastViewNames = new ArrayList<String>();
 
     @Before
     public void start()
@@ -48,7 +42,7 @@ public class TerminalTest
 
         LangTool.init();
 
-        term.startNewSession();
+        tnvt vt = term.startNewSession().getSession().getVT();
 
         while(true) {
             sleep(10000);
