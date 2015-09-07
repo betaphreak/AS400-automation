@@ -1,5 +1,6 @@
 package ro.nn.qa.automation.tests;
 
+import javafx.scene.input.Mnemonic;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,17 +47,36 @@ public class TerminalTest
 
         LangTool.init();
 
-        Session5250 session = term.startNewSession().getSession();
-        sleep(5000);
-        ScreenField[] fields = session.getScreen().getScreenFields().getFields();
+        Screen5250 screen = term.startNewSession().getSession().getScreen();
 
-        ScreenField userName = fields[0];
-        userName.setString("GIUROAL");
-        ScreenField pass = fields[1];
 
-        while(true) {
-            sleep(10000);
+        for (int i = 1; i <= 10; i++ ) {
+
+            sleep(5000);
+            ScreenField[] fields = screen.getScreenFields().getFields();
+
+            ScreenField userName = fields[0];
+            userName.setString("GIUROAL");
+
+            ScreenField pass = fields[1];
+            pass.setString("Bucuresti1");
+
+            screen.sendKeys("[enter]");
+
+            sleep(1000);
+            screen.sendKeys("[enter]");
+
+            screen.sendKeys("72");
+            screen.sendKeys("[enter]");
+
+            sleep(1000);
+            screen.sendKeys("[pf3]");
+
+            sleep(1000);
+            screen.sendKeys("[pf3]");
+
         }
+
     }
 
 

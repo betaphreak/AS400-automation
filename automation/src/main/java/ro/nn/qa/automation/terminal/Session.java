@@ -109,9 +109,7 @@ public class Session extends SessionPanel
     }
 
 
-    private static Dimension deriveOptimalSize(JComponent comp, Font f
-            , Border brdr, int nrChars
-            , int nrLines)
+    private static Dimension deriveOptimalSize(JComponent comp, Font f, Border brdr, int nrChars, int nrLines)
     {
         if (comp == null)
             return null;
