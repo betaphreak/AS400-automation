@@ -24,19 +24,7 @@ public class Session extends SessionPanel
 {
     private static final long serialVersionUID = 1L;
 
-    private Dimension preferredSize;
-    private Rectangle prevRect;
     private Properties sessionProperties;
-
-    private boolean embeddedSignon;
-    private String user;
-    private String password;
-    private String library;
-    private String menu;
-    private String program;
-    private String initialCommand;
-    private String afterSignon;
-    private int visibilityInterval;
 
     public Session(String configurationResource, String sessionName)
     {

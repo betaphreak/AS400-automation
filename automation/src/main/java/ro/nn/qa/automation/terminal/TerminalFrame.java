@@ -341,8 +341,7 @@ public class TerminalFrame extends TerminalViewInterface implements ChangeListen
         SwingUtilities.invokeLater(
                 () -> {
 
-                    // TODO: bypass private resizeMe() method for
-                    // sesgui.resizeMe();
+                    // TODO: bypass private resizeMe() method for sesgui.resizeMe();
 
                     Method method = null;
                     try {
@@ -423,9 +422,6 @@ public class TerminalFrame extends TerminalViewInterface implements ChangeListen
         return (SessionPanel)sessTabbedPane.getComponentAt(index);
     }
 
-    /* (non-Javadoc)
-     * @see org.tn5250j.interfaces.GUIViewInterface#onSessionChanged(org.tn5250j.event.SessionChangeEvent)
-     */
     @Override
     public void onSessionChanged(SessionChangeEvent changeEvent) {
 
@@ -445,12 +441,7 @@ public class TerminalFrame extends TerminalViewInterface implements ChangeListen
                         this.log.debug("SessionChangedEvent: " + changeEvent.getState() + " " + devname);
                     }
                     if (tabidx >= 0 && tabidx < sessTabbedPane.getTabCount()) {
-                        Runnable tc = new Runnable () {
-                            @Override
-                            public void run() {
-                                sessTabbedPane.setTitleAt(tabidx,determineTabName(sesgui));
-                            }
-                        };
+                        Runnable tc = () -> sessTabbedPane.setTitleAt(tabidx,determineTabName(sesgui));
                         SwingUtilities.invokeLater(tc);
                     }
                     updateSessionTitle();
