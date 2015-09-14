@@ -390,6 +390,7 @@ public class Terminal implements BootListener, SessionListener, EmulatorActionLi
     }
 
 
+
     public void bootOptionsReceived(BootEvent bootEvent) {
         log.info(" boot options received " + bootEvent.getNewSessionOptions());
 

@@ -304,64 +304,59 @@ public class TerminalFrame extends TerminalViewInterface implements ChangeListen
         }
     }
 
-    /**
-     * @param tabText
-     * @param sesgui
-     * @param focus TRUE is the new tab should be focused, otherwise FALSE
-     */
-    private final void createTabWithSessionContent(final String tabText, final SessionPanel sesgui, final boolean focus) {
+    private final void createTabWithSessionContent(final String tabText, final SessionPanel sessionGui, final boolean focus) {
 
-        // TODO: sesgui.session is private; need to workaround this!
+        // TODO: sessionGui.session is private; need to workaround this!
 
         Field s = null;
         try {
-            s = sesgui.getClass().getDeclaredField("session");
+            s = sessionGui.getClass().getDeclaredField("session");
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
         s.setAccessible(true);
 
         try {
-            sessTabbedPane.addTab(tabText, determineIconForSession( (Session5250) s.get(sesgui)), sesgui);
+            sessTabbedPane.addTab(tabText, determineIconForSession( (Session5250) s.get(sessionGui)), sessionGui);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        final int idx = sessTabbedPane.indexOfComponent(sesgui);
+        final int idx = sessTabbedPane.indexOfComponent(sessionGui);
         // add the [x] to the tab
         final ButtonTabComponent bttab = new ButtonTabComponent(this.sessTabbedPane);
         bttab.addTabCloseListener(this);
         sessTabbedPane.setTabComponentAt(idx, bttab);
 
         // add listeners
-        sesgui.addSessionListener(this);
-        sesgui.addSessionJumpListener(this);
-        sesgui.addSessionListener(bttab);
+        sessionGui.addSessionListener(this);
+        sessionGui.addSessionJumpListener(this);
+        sessionGui.addSessionListener(bttab);
 
         // visual cleanups
         SwingUtilities.invokeLater(
                 () -> {
 
-                    // TODO: bypass private resizeMe() method for sesgui.resizeMe();
+                    // TODO: bypass private resizeMe() method for sessionGui.resizeMe();
 
                     Method method = null;
                     try {
-                        method = sesgui.getClass().getDeclaredMethod("resizeMe");
+                        method = sessionGui.getClass().getDeclaredMethod("resizeMe");
                     } catch (NoSuchMethodException e) {
                         e.printStackTrace();
                     }
                     method.setAccessible(true);
                     try {
-                        method.invoke(sesgui);
+                        method.invoke(sessionGui);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     } catch (InvocationTargetException e) {
                         e.printStackTrace();
                     }
 
-                    sesgui.repaint();
+                    sessionGui.repaint();
                     if (focus) {
                         sessTabbedPane.setSelectedIndex(idx);
-                        sesgui.requestFocusInWindow();
+                        sessionGui.requestFocusInWindow();
                     }
                 }
         );
@@ -450,13 +445,9 @@ public class TerminalFrame extends TerminalViewInterface implements ChangeListen
         }
     }
 
-    /**
-     * @param ses5250
-     * @return Icon or NULL depending on session State
-     */
-    private static final Icon determineIconForSession(Session5250 ses5250) {
-        if (ses5250 != null && ses5250.isSslConfigured()) {
-            if (ses5250.isSslSocket()) {
+    private static final Icon determineIconForSession(Session5250 session) {
+        if (session != null && session.isSslConfigured()) {
+            if (session.isSslSocket()) {
                 return GUIGraphicsUtils.getClosedLockIcon();
             } else {
                 return GUIGraphicsUtils.getOpenLockIcon();
