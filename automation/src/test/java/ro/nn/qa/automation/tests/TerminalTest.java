@@ -42,34 +42,32 @@ public class TerminalTest
 
         Screen5250 screen = term.startNewSession().getSession().getScreen();
 
+        sleep(5000);
+        ScreenField[] fields = screen.getScreenFields().getFields();
 
-        for (int i = 1; i <= 10; i++ ) {
+        ScreenField userName = fields[0];
+        userName.setString("GIUROAL");
 
-            sleep(5000);
-            ScreenField[] fields = screen.getScreenFields().getFields();
+        ScreenField pass = fields[1];
+        pass.setString("Bucuresti1");
 
-            ScreenField userName = fields[0];
-            userName.setString("GIUROAL");
+        screen.sendKeys("[enter]");
 
-            ScreenField pass = fields[1];
-            pass.setString("Bucuresti1");
+        sleep(1000);
+        screen.sendKeys("[enter]");
 
-            screen.sendKeys("[enter]");
+        screen.sendKeys("72[enter]");
+        sleep(1000);
 
-            sleep(1000);
-            screen.sendKeys("[enter]");
+        fields = screen.getScreenFields().getFields();
 
-            screen.sendKeys("72");
-            screen.sendKeys("[enter]");
 
-            sleep(1000);
-            screen.sendKeys("[pf3]");
+        screen.sendKeys("[pf3]");
 
-            sleep(1000);
-            screen.sendKeys("[pf3]");
-        }
-
+        sleep(1000);
+        screen.sendKeys("[pf3]");
     }
+
 
 
 
