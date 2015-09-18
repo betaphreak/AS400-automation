@@ -4,16 +4,17 @@ import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import io.codearte.jfairy.Fairy;
+
 import io.codearte.jfairy.producer.person.Person;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.tn5250j.framework.tn5250.Screen5250;
+
 import org.tn5250j.framework.tn5250.ScreenField;
 import org.tn5250j.tools.LangTool;
 import ro.nn.qa.automation.terminal.Terminal;
 import ro.nn.qa.bootstrap.Controller;
-
-import java.text.SimpleDateFormat;
+import ro.nn.qa.business.BusinessObjectX;
+import ro.nn.qa.business.ClientsMenuX;
+import ro.nn.qa.business.MasterMenuX;
 
 import static java.lang.Thread.sleep;
 
@@ -21,38 +22,10 @@ import static java.lang.Thread.sleep;
  * Created by Alexandru Giurovici on 14.09.2015.
  */
 
-public class Steps extends BaseSteps {
-    Screen5250 screen;
-    ScreenField current;
-    Fairy fairy = Fairy.create();
-
-    protected void send(String chars, int numTabs) {
-        screen.sendKeys(chars);
-        for (int i = 0; i < numTabs; i++)
-            screen.sendKeys("[tab]");
-        try {
-            sleep(250);
-        } catch (InterruptedException e) {
-            log.warn(e.getMessage());
-        }
-        screen.repaintScreen();
-    }
-
-    protected void send(String chars) {
-        send(chars, 1);
-    }
-
-
-    protected void enter() {
-        try {
-            screen.repaintScreen();
-            sleep(2000);
-        } catch (InterruptedException e) {
-            log.warn(e.getCause());
-        }
-        screen.sendKeys("[enter]");
-    }
-
+public class Steps extends StepsRunner
+{
+    MasterMenuX mainPage;
+    ClientsMenuX clientsMenu;
 
     @Given("^I am connected to NRO$")
     public void I_am_connected_to_NRO() throws InterruptedException {
@@ -140,6 +113,32 @@ public class Steps extends BaseSteps {
         send("01/01/1980", 3);
         send((person.isMale() ? "1": "2") + "800101" + RandomStringUtils.randomNumeric(6) + "[pf5]");
         enter();
+
+    }
+
+    @Given("^I am connected to NRO \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\"$")
+    public void connect(String user, String pass, String env) throws Throwable {
+
+        controller = new Controller();
+        controller.start();
+
+        terminal = new Terminal();
+
+        if (controller != null)
+            controller.addListener(terminal);
+
+        // this is the first instance of the business object that needs to own the terminal
+        BusinessObjectX bo = new BusinessObjectX(terminal);
+
+        mainPage = bo.login(user, pass, env);
+    }
+
+    @And("^I navigate to Clients menu$")
+    public void clientsMenu() throws Throwable {
+        assert mainPage != null;
+
+        // to get to the clients menu you need to be previously logged in
+        clientsMenu = mainPage.getClientsMenu();
     }
 }
 
