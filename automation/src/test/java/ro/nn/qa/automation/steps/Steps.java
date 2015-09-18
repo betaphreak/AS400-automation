@@ -9,11 +9,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import org.tn5250j.framework.tn5250.ScreenField;
 import org.tn5250j.tools.LangTool;
+
 import ro.nn.qa.automation.terminal.Terminal;
 import ro.nn.qa.bootstrap.Controller;
-import ro.nn.qa.business.BusinessObjectX;
-import ro.nn.qa.business.ClientsAdminX;
-import ro.nn.qa.business.MasterMenuX;
 
 import static java.lang.Thread.sleep;
 
@@ -23,9 +21,6 @@ import static java.lang.Thread.sleep;
 
 public class Steps extends StepsRunner
 {
-    MasterMenuX mainPage;
-    ClientsAdminX clientsMenu;
-
     @Given("^I am connected to NRO$")
     public void I_am_connected_to_NRO() throws InterruptedException {
         controller = new Controller();
@@ -115,29 +110,6 @@ public class Steps extends StepsRunner
 
     }
 
-    @Given("^I am connected to NRO \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\"$")
-    public void connect(String user, String pass, String env) throws Throwable {
 
-        controller = new Controller();
-        controller.start();
-
-        terminal = new Terminal();
-
-        if (controller != null)
-            controller.addListener(terminal);
-
-        // this is the first instance of the business object that needs to own the terminal
-        BusinessObjectX bo = new BusinessObjectX(terminal);
-
-        mainPage = bo.login(user, pass, env);
-    }
-
-    @And("^I navigate to Clients menu$")
-    public void clientsMenu() throws Throwable {
-        assert mainPage != null;
-
-        // to get to the clients menu you need to be previously logged in
-        clientsMenu = mainPage.getClientsMenu();
-    }
 }
 

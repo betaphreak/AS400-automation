@@ -19,4 +19,11 @@ public class MasterMenuX extends BusinessObjectX
         return new ClientsAdminX(this);
     }
 
+    public NewBusinessMenuX getNewBusinessMenu() throws InterruptedException {
+        sleep(PAGE_DELAY);
+        tab(4);
+        enter();
+        return new NewBusinessMenuX(this);
+    }
+
 }

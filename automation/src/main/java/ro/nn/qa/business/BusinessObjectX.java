@@ -6,6 +6,7 @@ import org.tn5250j.tools.LangTool;
 import org.tn5250j.tools.logging.TN5250jLogFactory;
 import org.tn5250j.tools.logging.TN5250jLogger;
 import ro.nn.qa.automation.terminal.Terminal;
+import ro.nn.qa.bootstrap.Controller;
 
 import static java.lang.Thread.sleep;
 
@@ -67,7 +68,23 @@ public class BusinessObjectX extends Screen5250
         screen.repaintScreen();
     }
 
+    protected void f3() throws InterruptedException {
+        screen.sendKeys("[pf3]");
+        sleep(TAB_DELAY);
+        screen.repaintScreen();
+    }
 
+    protected void f4() throws InterruptedException {
+        screen.sendKeys("[pf4]");
+        sleep(TAB_DELAY);
+        screen.repaintScreen();
+    }
+
+    protected void f5() throws InterruptedException {
+        screen.sendKeys("[pf5]");
+        sleep(TAB_DELAY);
+        screen.repaintScreen();
+    }
 
     protected void send(String chars, int numTabs)
     {
