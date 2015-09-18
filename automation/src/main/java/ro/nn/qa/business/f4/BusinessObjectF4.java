@@ -1,13 +1,15 @@
-package ro.nn.qa.business;
+package ro.nn.qa.business.f4;
+
+import ro.nn.qa.business.BusinessObjectX;
 
 /**
  * Created by Alexandru Giurovici on 18.09.2015.
  */
-public class LocateClientX extends BusinessObjectX
+public class BusinessObjectF4 extends BusinessObjectX
 {
-    private BusinessObjectX owner;
+    protected BusinessObjectX owner;
 
-    public LocateClientX(BusinessObjectX own)
+    public BusinessObjectF4(BusinessObjectX own)
     {
         this.screen = own.getScreen();
         owner = own;
