@@ -9,9 +9,8 @@ import static java.lang.Thread.sleep;
 // this is S5002 02
 public class NewContractProposalX extends BusinessObjectX
 {
-    public NewBusinessMenuX back()
-    {
-        screen.sendKeys("[pf3]");
+    public NewBusinessMenuX back() throws InterruptedException {
+        f3();
         return new NewBusinessMenuX(this);
     }
 

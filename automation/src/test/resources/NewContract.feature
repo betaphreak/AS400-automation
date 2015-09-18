@@ -6,6 +6,7 @@ Feature: New Contract
     Given I am connected to NRO "<environment>" with "<user>" and "<password>"
     And I navigate to New Contract Proposal
     And I create a new Contract of type "<type>"
+    Then I go back
 
     Examples:
       | user    | password   | environment | type  |

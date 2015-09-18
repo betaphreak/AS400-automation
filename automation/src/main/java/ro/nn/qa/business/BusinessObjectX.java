@@ -19,7 +19,7 @@ public class BusinessObjectX extends Screen5250
     protected Screen5250 screen;
     protected TN5250jLogger log = TN5250jLogFactory.getLogger(this.getClass());
     protected final int PAGE_DELAY = 1000;
-    protected final int TAB_DELAY = 250;
+    protected final int TAB_DELAY = 200;
 
     public Terminal getTerminal()
     {
@@ -68,22 +68,22 @@ public class BusinessObjectX extends Screen5250
         screen.repaintScreen();
     }
 
-    protected void f3() throws InterruptedException {
-        screen.sendKeys("[pf3]");
+    protected void f(int n) throws InterruptedException {
+        screen.sendKeys("[pf" + n + "]");
         sleep(TAB_DELAY);
         screen.repaintScreen();
+    }
+
+    protected void f3() throws InterruptedException {
+        f(3);
     }
 
     protected void f4() throws InterruptedException {
-        screen.sendKeys("[pf4]");
-        sleep(TAB_DELAY);
-        screen.repaintScreen();
+        f(4);
     }
 
     protected void f5() throws InterruptedException {
-        screen.sendKeys("[pf5]");
-        sleep(TAB_DELAY);
-        screen.repaintScreen();
+        f(5);
     }
 
     protected void send(String chars, int numTabs)

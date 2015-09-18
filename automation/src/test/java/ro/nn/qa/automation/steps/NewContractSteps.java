@@ -4,6 +4,7 @@ import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 
+import cucumber.api.java.en.Then;
 import ro.nn.qa.automation.terminal.Terminal;
 import ro.nn.qa.bootstrap.Controller;
 import ro.nn.qa.business.*;
@@ -51,5 +52,15 @@ public class NewContractSteps extends StepsRunner
         endowment.setContractOwner("Adrian");
 
         newContractProposal = endowment.back();
+    }
+
+    @Then("^I go back$")
+    public void goBack() throws Throwable {
+
+        assert newContractProposal != null;
+        NewBusinessMenuX newBusinessMenu = newContractProposal.back();
+
+        assert newBusinessMenu != null;
+        mainPage = newBusinessMenu.back();
     }
 }

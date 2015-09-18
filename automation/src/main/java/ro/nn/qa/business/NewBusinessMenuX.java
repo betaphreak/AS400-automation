@@ -12,9 +12,8 @@ public class NewBusinessMenuX extends BusinessObjectX
         this.screen = owner.getScreen();
     }
 
-    public MasterMenuX back()
-    {
-        screen.sendKeys("[pf3]");
+    public MasterMenuX back() throws InterruptedException {
+        f3();
         return new MasterMenuX(this);
     }
 
