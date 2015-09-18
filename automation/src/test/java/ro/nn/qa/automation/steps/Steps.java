@@ -1,6 +1,5 @@
 package ro.nn.qa.automation.steps;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -13,7 +12,7 @@ import org.tn5250j.tools.LangTool;
 import ro.nn.qa.automation.terminal.Terminal;
 import ro.nn.qa.bootstrap.Controller;
 import ro.nn.qa.business.BusinessObjectX;
-import ro.nn.qa.business.ClientsMenuX;
+import ro.nn.qa.business.ClientsAdminX;
 import ro.nn.qa.business.MasterMenuX;
 
 import static java.lang.Thread.sleep;
@@ -25,7 +24,7 @@ import static java.lang.Thread.sleep;
 public class Steps extends StepsRunner
 {
     MasterMenuX mainPage;
-    ClientsMenuX clientsMenu;
+    ClientsAdminX clientsMenu;
 
     @Given("^I am connected to NRO$")
     public void I_am_connected_to_NRO() throws InterruptedException {

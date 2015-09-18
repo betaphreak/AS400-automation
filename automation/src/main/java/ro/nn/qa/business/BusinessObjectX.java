@@ -17,6 +17,8 @@ public class BusinessObjectX extends Screen5250
     protected Terminal terminal;
     protected Screen5250 screen;
     protected TN5250jLogger log = TN5250jLogFactory.getLogger(this.getClass());
+    protected final int PAGE_DELAY = 1000;
+    protected final int TAB_DELAY = 250;
 
     public Terminal getTerminal()
     {
@@ -41,15 +43,31 @@ public class BusinessObjectX extends Screen5250
         this.screen = owner.getScreen();
     }
 
-    protected void enter() {
-        try {
-            screen.repaintScreen();
-            sleep(2000);
-        } catch (InterruptedException e) {
-            log.warn(e.getCause());
-        }
+    protected void enter() throws InterruptedException
+    {
         screen.sendKeys("[enter]");
+        sleep(PAGE_DELAY);
+        screen.repaintScreen();
+
     }
+
+    protected void tab(int numTabs) throws InterruptedException {
+        for (int i = 0; i < numTabs; i++)
+        {
+            screen.sendKeys("[tab]");
+            sleep(TAB_DELAY);
+            screen.repaintScreen();
+        }
+    }
+
+    protected void navigate(int numTabs) throws InterruptedException {
+        sleep(PAGE_DELAY);
+        tab(numTabs);
+        enter();
+        screen.repaintScreen();
+    }
+
+
 
     protected void send(String chars, int numTabs)
     {
@@ -65,7 +83,7 @@ public class BusinessObjectX extends Screen5250
 
         try
         {
-            sleep(250);
+            sleep(TAB_DELAY);
         }
         catch (InterruptedException e)
         {
@@ -83,12 +101,11 @@ public class BusinessObjectX extends Screen5250
     {
         LangTool.init();
         screen = term.startNewSession().getSession().getScreen();
-        sleep(5000);
+        sleep((TAB_DELAY * PAGE_DELAY) / 100);
         terminal = term;
     }
 
-    public MasterMenuX login(String env, String user, String pass)
-    {
+    public MasterMenuX login(String env, String user, String pass) throws InterruptedException {
         ScreenField[] fields = screen.getScreenFields().getFields();
         try {
             fields[0].setString(user);
