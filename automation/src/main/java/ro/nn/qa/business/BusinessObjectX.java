@@ -70,7 +70,7 @@ public class BusinessObjectX extends Screen5250
 
     protected void f(int n) throws InterruptedException {
         screen.sendKeys("[pf" + n + "]");
-        sleep(TAB_DELAY);
+        sleep(PAGE_DELAY);
         screen.repaintScreen();
     }
 

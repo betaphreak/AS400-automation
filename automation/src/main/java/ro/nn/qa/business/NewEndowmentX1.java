@@ -24,26 +24,46 @@ public class NewEndowmentX1 extends BusinessObjectX
     {
         f4();
         LocateClientF4 client = new LocateClientF4(this);
-        client.search(search);
+        client.search(search, 2);
         client.submit();
         f5();
     }
 
-    public void setRiskCommDate(String date) throws InterruptedException {
+    public void setRiskCommDate(String date) throws InterruptedException
+    {
         send(date);
         f5();
     }
 
-    public void setFreq() throws InterruptedException {
+    public void setBillingFreq(String freq) throws InterruptedException
+    {
         f4();
-        BillingFreqF4 freq = new BillingFreqF4(this);
-        freq.search("");
-        freq.submit();
+        BillingFreqF4 billingFreq = new BillingFreqF4(this);
+        billingFreq.search(freq, 1);
+        billingFreq.submit();
+        f5();
+        // don't know why F5 doesn't advance to payment method
+        tab(1);
+    }
+
+    public void setPaymentMethod(String method) throws InterruptedException
+    {
+        send(method);
         f5();
     }
 
+    public void setSerialNumber(String arg1) throws InterruptedException
+    {
+        send(arg1);
+        f5();
+    }
 
-
-
-
+    public void setAgent(String arg1) throws InterruptedException
+    {
+        f4();
+        LocateClientF4 agent = new LocateClientF4(this);
+        agent.search(arg1, 2);
+        agent.submit();
+        f5();
+    }
 }

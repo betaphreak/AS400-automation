@@ -20,13 +20,15 @@ public class BusinessObjectF4 extends BusinessObjectX
         return (T) owner;
     }
 
-    public void search(String s) throws InterruptedException {
-        send(s, 0);
-        enter();
-        tab(2);
+    public void search(String s, int numTabs) throws InterruptedException
+    {
+        if (s.length() > 0)
+        {
+            send(s, 0);
+            enter();
+        }
+        tab(numTabs);
         send("1", 0);
     }
-
-
 
 }

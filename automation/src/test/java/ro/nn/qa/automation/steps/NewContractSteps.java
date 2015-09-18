@@ -16,6 +16,7 @@ public class NewContractSteps extends StepsRunner
 {
     MasterMenuX mainPage;
     NewContractProposalX newContractProposal;
+    NewEndowmentX1 endowment;
 
     @Given("^I am connected to NRO \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\"$")
     public void connect(String user, String pass, String env) throws Throwable {
@@ -46,21 +47,56 @@ public class NewContractSteps extends StepsRunner
     {
         // to create a new contract you need to be on the new contract proposal screen
         assert newContractProposal != null;
-        NewEndowmentX1 endowment = newContractProposal.createNewContract(contractType);
-
-        assert endowment != null;
-        endowment.setContractOwner("Adrian");
-
-        newContractProposal = endowment.back();
+        endowment = newContractProposal.createNewContract(contractType);
     }
 
     @Then("^I go back$")
-    public void goBack() throws Throwable {
+    public void goBack() throws Throwable
+    {
+        assert endowment != null;
+        newContractProposal = endowment.back();
 
         assert newContractProposal != null;
         NewBusinessMenuX newBusinessMenu = newContractProposal.back();
+    }
 
-        assert newBusinessMenu != null;
-        mainPage = newBusinessMenu.back();
+    @And("^I set the contract owner to \"([^\"]*)\"$")
+    public void setContractOwner(String owner) throws Throwable
+    {
+        assert endowment != null;
+        endowment.setContractOwner(owner);
+    }
+
+    @And("^I set the date to \"([^\"]*)\"$")
+    public void setRiskCommDate(String date) throws Throwable
+    {
+        assert endowment != null;
+        endowment.setRiskCommDate(date);
+    }
+
+    @And("^I set the billing frequency to \"([^\"]*)\"$")
+    public void setBillingFreq(String freq) throws Throwable {
+        assert endowment != null;
+        endowment.setBillingFreq(freq);
+
+    }
+
+    @And("^I set the method of payment to \"([^\"]*)\"$")
+    public void setPaymentMethod(String method) throws Throwable {
+        assert endowment != null;
+        endowment.setPaymentMethod(method);
+    }
+
+    @And("^I set the serial number to \"([^\"]*)\"$")
+    public void setSerialNumber(String arg1) throws Throwable {
+        assert endowment != null;
+        endowment.setSerialNumber(arg1);
+    }
+
+    @And("^I set the agent to \"([^\"]*)\"$")
+    public void setAgent(String arg1) throws Throwable {
+        assert endowment != null;
+        endowment.setAgent(arg1);
+
     }
 }
