@@ -13,12 +13,13 @@ import ro.nn.qa.bootstrap.Controller;
  */
 
 @RunWith(Cucumber.class)
-@CucumberOptions(plugin = {"pretty", "html:target/cucumber"}, features="src/test/resources")
+@CucumberOptions(
+        // plugin = {"pretty", "html:target/cucumber"},
+        features="src/test/resources"
+)
 public class BaseSteps
 {
-
     protected TN5250jLogger log = TN5250jLogFactory.getLogger(this.getClass());
     protected Controller controller;
     protected Terminal terminal;
-
 }

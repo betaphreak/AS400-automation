@@ -4,9 +4,11 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 
+import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.person.Person;
 import org.apache.commons.lang3.RandomStringUtils;
 
+import org.tn5250j.framework.tn5250.Screen5250;
 import org.tn5250j.framework.tn5250.ScreenField;
 import org.tn5250j.tools.LangTool;
 
@@ -19,8 +21,39 @@ import static java.lang.Thread.sleep;
  * Created by Alexandru Giurovici on 14.09.2015.
  */
 
-public class Steps extends StepsRunner
+public class Steps extends BaseSteps
 {
+    Screen5250 screen;
+    ScreenField current;
+    Fairy fairy = Fairy.create();
+
+    protected void send(String chars, int numTabs) {
+        screen.sendKeys(chars);
+        for (int i = 0; i < numTabs; i++)
+            screen.sendKeys("[tab]");
+        try {
+            sleep(250);
+        } catch (InterruptedException e) {
+            log.warn(e.getMessage());
+        }
+        screen.repaintScreen();
+    }
+
+    protected void send(String chars) {
+        send(chars, 1);
+    }
+
+
+    protected void enter() {
+        try {
+            screen.repaintScreen();
+            sleep(2000);
+        } catch (InterruptedException e) {
+            log.warn(e.getCause());
+        }
+        screen.sendKeys("[enter]");
+    }
+
     @Given("^I am connected to NRO$")
     public void I_am_connected_to_NRO() throws InterruptedException {
         controller = new Controller();
