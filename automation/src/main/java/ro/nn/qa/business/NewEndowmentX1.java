@@ -58,12 +58,24 @@ public class NewEndowmentX1 extends BusinessObjectX
         f5();
     }
 
-    public void setAgent(String arg1) throws InterruptedException
+    public void setAgentBySearch(String arg1) throws InterruptedException
     {
         f4();
         LocateClientF4 agent = new LocateClientF4(this);
         agent.search(arg1, 2);
         agent.submit();
         f5();
+    }
+
+    public void setAgentById(String arg1) throws InterruptedException
+    {
+        send(arg1);
+        f5();
+    }
+
+
+    public NewEndowmentX2 next() throws InterruptedException {
+        enter();
+        return new NewEndowmentX2(this);
     }
 }

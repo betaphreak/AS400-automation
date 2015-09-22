@@ -2,6 +2,7 @@ package ro.nn.qa.business;
 
 import org.tn5250j.framework.tn5250.Screen5250;
 import org.tn5250j.framework.tn5250.ScreenField;
+import org.tn5250j.framework.tn5250.ScreenFields;
 import org.tn5250j.tools.LangTool;
 import org.tn5250j.tools.logging.TN5250jLogFactory;
 import org.tn5250j.tools.logging.TN5250jLogger;
@@ -44,6 +45,34 @@ public class BusinessObjectX extends Screen5250
         this.screen = owner.getScreen();
     }
 
+    protected ScreenField getCurrentField()
+    {
+        ScreenFields screenFields = getScreenFields();
+        return (screenFields != null) ? screenFields.getCurrentField() : null;
+    }
+
+    protected String getField(int i)
+    {
+        try
+        {
+            return getScreen().copyTextField(i);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+
+    }
+
+    protected void erasefld() throws InterruptedException
+    {
+        screen.sendKeys("[erasefld]");
+        sleep(TAB_DELAY);
+        screen.repaintScreen();
+    }
+
+
+
     protected void enter() throws InterruptedException
     {
         screen.sendKeys("[enter]");
@@ -84,6 +113,15 @@ public class BusinessObjectX extends Screen5250
 
     protected void f5() throws InterruptedException {
         f(5);
+    }
+
+    protected void del(int numDels)
+    {
+        for (int i = 0; i < numDels; i++)
+        {
+            screen.sendKeys("[del]");
+        }
+        screen.repaintScreen();
     }
 
     protected void send(String chars, int numTabs)

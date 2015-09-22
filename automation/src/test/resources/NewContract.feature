@@ -15,8 +15,9 @@ Feature: New Contracts
     And I set the method of payment to "<method>"
     And I set the serial number to "<serial>"
     And I set the agent to "<agent>"
+    Then I submit
     Then I go back
 
     Examples:
       | type  | owner   | date       | freq | method | serial | agent  |
-      | 1R1   | Adrian  | 01/01/2015 |      | C      | 1337   | Vasile |
+      | 1R1   | Adrian  | 01/01/2015 |      | C      | 1337   | 75540  |

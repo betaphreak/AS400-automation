@@ -17,6 +17,7 @@ public class NewContractSteps extends StepsRunner
     MasterMenuX mainPage;
     NewContractProposalX newContractProposal;
     NewEndowmentX1 endowment;
+    NewEndowmentX2 endowment2;
 
     @Given("^I am connected to NRO \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\"$")
     public void connect(String user, String pass, String env) throws Throwable {
@@ -96,7 +97,13 @@ public class NewContractSteps extends StepsRunner
     @And("^I set the agent to \"([^\"]*)\"$")
     public void setAgent(String arg1) throws Throwable {
         assert endowment != null;
-        endowment.setAgent(arg1);
+        endowment.setAgentById(arg1);
 
+    }
+
+    @Then("^I submit$")
+    public void I_submit() throws Throwable
+    {
+        endowment2 = endowment.next();
     }
 }
